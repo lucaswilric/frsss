@@ -10,8 +10,8 @@ get '/' do
   xsl = response.body
   
   xslt = XML::XSLT.new()
-  xslt.xml = REXML::Document.new rss
-  xslt.xsl = REXML::Document.new xsl
+  xslt.xml = REXML::Document.new rss.force_encoding('utf-8')
+  xslt.xsl = REXML::Document.new xsl.force_encoding('utf-8')
   
   xslt.serve()
 end
