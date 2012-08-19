@@ -12,7 +12,7 @@ end
 
 # Get the feed and perform an XSL transform on it, then present the result to the client.
 get '/' do
-  rss = Faraday.get(settings.feeds.get_url(request.host)).body
+  rss = Faraday.get(settings.feeds.get_url(subdomain(request.host))).body
   xsl = Faraday.get('http://assets.lucasrichter.id.au/xsl/rss.xsl').body
   
   xslt = XML::XSLT.new()
