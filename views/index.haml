@@ -1,0 +1,17 @@
+%html
+ %head
+  %title="FEEEEEED-ZUH!"
+  %link{'rel'=>'stylesheet', 'href'=>'http://assets.lucasrichter.id.au/bootstrap/css/bootstrap.min.css'}
+ %body
+  %section#grid-system
+   %div.row
+    %div.span6
+     %h1="Feeds"
+   - @feeds.each do |feed|
+    %div.row
+     %div.span6
+      %span= 'Name:'
+      %strong= feed['name']
+      %br
+      %span= 'URL:'
+      %strong= feed['url']
