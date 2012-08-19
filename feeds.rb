@@ -16,8 +16,16 @@ module Feeds
     
     def initialize(decorated)
       @decorated = decorated
-      @db = Mongo::Connection.new.db('friendly-rss')['feeds']
-      @feeds = @db.find(:url => /^http/).to_a
+      
+      if ENV['MONGOHQ_URL']
+        url = URI.parse(ENV['MONGOHQ_URL'])
+        conn = Mongo::Connection.new(url.host, url.port)
+        @db = conn.db('friendly-rss')
+        @db.auth(url.username, url.password)
+      else
+        @db = Mongo::Connection.new.db('friendly-rss')['feeds']
+      end
+      @feeds = @db.find(:url => /^https?:/).to_a
     end
     
     def get_url(name)
