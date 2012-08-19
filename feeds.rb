@@ -21,7 +21,7 @@ module Feeds
         url = URI.parse(ENV['MONGOHQ_URL'])
         conn = Mongo::Connection.new(url.host, url.port)
         @db = conn.db('friendly-rss')
-        @db.auth(url.user, url.password)
+        @db.authenticate(url.user, url.password)
       else
         @db = Mongo::Connection.new.db('friendly-rss')['feeds']
       end
