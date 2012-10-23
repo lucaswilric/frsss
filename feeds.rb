@@ -14,7 +14,7 @@ module Feeds
   class DB
     include Decorator
     
-    def initialize(decorated)
+    def initialize(decorated = nil)
       @decorated = decorated
       
       if ENV['MONGOHQ_URL']
@@ -22,27 +22,29 @@ module Feeds
         conn = Mongo::Connection.new(url.host, url.port)
         database = conn.db(url.path.gsub(/^\//, ''))
         database.authenticate(url.user, url.password)
-        @db = database['feeds']
+        @collection = database['feeds']
       else
-        @db = Mongo::Connection.new.db('friendly-rss')['feeds']
+        @collection = Mongo::Connection.new.db('friendly-rss')['feeds']
       end
-      @feeds = @db.find(:url => /^https?:/).to_a
+      
     end
     
     def get_url(name)
-      f = @feeds.select {|f| f['name'] == name }
+      f = all.select {|f| f['name'] == name }
       
-      return f[0]['url'] if f.size > 0
+      return f.first['url'] if f.size > 0
       
-      @decorated.get_url(name)
+      @decorated.get_url(name) if @decorated
     end
 
     def all
-      @feeds
+      @collection.find(:url => /^https?:/)
     end
     
     def create(params)
-      @db.insert(params)
+      raise "A feed named '#{params['name']}' already exists." if @collection.find('name' => params['name']).to_a
+      
+      @collection.insert(params)
     end
   end
   
