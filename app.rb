@@ -27,24 +27,3 @@ end
 get '/rss' do
   Faraday.get(settings.feeds.get_url(subdomain(request.host))).body
 end
-
-#get '/feeds' do
-#  if settings.feeds.respond_to?(:all)
-#    @feeds = settings.feeds.all
-#    haml :index
-#  else
-#    "Nothing to see here."
-#  end
-#end
-#
-#get '/feeds/new' do
-#  haml :feeds_new
-#end
-#
-#post '/feeds/create' do
-#  [:url, :name].each {|field| raise "Bad data!" if [nil, ''].include? params[field] }
-#
-#  settings.feeds.create(:name => params[:name], :url => params[:url])
-#  
-#  redirect to('/feeds')
-#end
