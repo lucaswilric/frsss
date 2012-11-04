@@ -26,19 +26,25 @@ module Feeds
       else
         @collection = Mongo::Connection.new.db('friendly-rss')['feeds']
       end
-      
     end
     
-    def get_url(name)
-      f = all.select {|f| f['name'] == name }
-      
-      return f.first['url'] if f.size > 0
-      
-      @decorated.get_url(name) if @decorated
+    %w(url xsl).each do |prp|
+      define_method "get_#{prp}" do |name|
+        f = named(name)
+        
+        return f.first[prp] if f.size > 0 and f.first[prp]
+        return @decorated.send("get_#{prp}".to_sym, name) if @decorated
+        
+        nil
+      end
     end
-
+    
     def all
       @collection.find(:url => /^https?:/)
+    end
+    
+    def named(name)
+      all.select {|f| f['name'] == name }
     end
     
     def create(params)
@@ -49,12 +55,17 @@ module Feeds
   end
   
   class UrlPattern
-    def initialize(template)
-      @template = template
+    def initialize(url_template, xsl_url)
+      @url_template = url_template
+      @xsl_url = xsl_url
     end
-  
+    
+    def get_xsl(name)
+      @xsl_url
+    end
+    
     def get_url(name)
-      @template.gsub('{NAME}', name)
+      @url_template.gsub('{NAME}', name)
     end
   end
 end

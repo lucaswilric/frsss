@@ -7,13 +7,14 @@ end
 
 configure do
   url_template = "http://grabbit.lucasrichter.id.au/download_jobs/tagged/{NAME}/feed.rss"
-  set :feeds, Feeds::DB.new(Feeds::UrlPattern.new(url_template))
+  xsl_url = 'http://assets.lucasrichter.id.au/xsl/rss.xsl'
+  set :feeds, Feeds::DB.new(Feeds::UrlPattern.new(url_template, xsl_url))
 end
 
 # Get the feed and perform an XSL transform on it, then present the result to the client.
 get '/' do
   rss = Faraday.get(settings.feeds.get_url(subdomain(request.host))).body
-  xsl = Faraday.get('http://assets.lucasrichter.id.au/xsl/rss.xsl').body
+  xsl = Faraday.get(settings.feeds.get_xsl(subdomain(request.host))).body
   
   xslt = XML::XSLT.new()
   xslt.xml = REXML::Document.new rss.force_encoding('utf-8')
