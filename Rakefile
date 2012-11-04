@@ -7,11 +7,13 @@ task :connect do
   puts "Connected."
 end
 
-task :add, [:name, :url] => :connect do |t, args|
-  [:url, :name].each {|field| raise "Bad data!" if [nil, ''].include? args[field] }
-  @feeds.create({ 'name' => args[:name], 'url' => args[:url] })
+task :add, [:name, :url, :xsl_url] => :connect do |t, args|
+  raise "Bad data!" if [nil, ''].include? args[:name]
+  @feeds.create({ 'name' => args[:name], 'url' => args[:url], 'xsl' => args[:xsl_url] })
 end
 
 task :list => :connect do
-  @feeds.all.each {|f| puts "#{ f['name'] }: #{ f['url'] }" }
+  @feeds.all.each do |f| 
+    @feeds.print(f)
+  end
 end

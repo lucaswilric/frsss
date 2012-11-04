@@ -48,9 +48,15 @@ module Feeds
     end
     
     def create(params)
-      raise "A feed named '#{params['name']}' already exists." if @collection.find('name' => params['name']).to_a
+      raise "A feed named '#{params['name']}' already exists." if @collection.find('name' => params['name']).count > 0
       
       @collection.insert(params)
+    end
+    
+    def print(f)
+      puts "#{ f['name'] }:"
+      puts "  URL: #{ f['url'] }"
+      puts "  XSL: #{ f['xsl'] || 'default' }"      
     end
   end
   
