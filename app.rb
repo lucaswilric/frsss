@@ -11,6 +11,10 @@ configure do
   set :feeds, Feeds::DB.new(Feeds::UrlPattern.new(url_template, xsl_url))
 end
 
+configure :production do
+  require 'newrelic_rpm'
+end
+
 # Get the feed and perform an XSL transform on it, then present the result to the client.
 get '/' do
   rss = Faraday.get(settings.feeds.get_url(subdomain(request.host))).body
