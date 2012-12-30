@@ -65,7 +65,7 @@ common: &default_settings
   # encryption involved in SSL communication, but this work is done
   # asynchronously to the threads that process your application code,
   # so it should not impact response times.
-  ssl: false
+  ssl: true
 
   # EXPERIMENTAL: enable verification of the SSL certificate sent by
   # the server. This setting has no effect unless SSL is enabled
@@ -144,7 +144,7 @@ common: &default_settings
     # recorded. The recorder has three modes, "off" which sends no
     # SQL, "raw" which sends the SQL statement in its original form,
     # and "obfuscated", which strips out numeric and string literals
-    record_sql: obfuscated
+    record_sql: off
     
     # Threshold in seconds for when to collect stack trace for a SQL
     # call. In other words, when SQL statements exceed this threshold,
