@@ -7,6 +7,8 @@ class DbConnector
         conn = Mongo::Connection.new(url.host, url.port)
         database = conn.db(url.path.gsub(/^\//, ''))
         database.authenticate(url.user, url.password)
+        
+        database
       else
         Mongo::Connection.new.db('friendly-rss')
       end
