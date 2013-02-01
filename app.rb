@@ -1,4 +1,4 @@
-gems = ['rexml/document', 'xml/xslt', 'haml', './feeds.rb']
+gems = ['rexml/document', 'xml/xslt', 'haml', './feeds.rb', './caching_fetcher.rb']
 gems.each {|_gem| require _gem }
 
 def subdomain(host)
@@ -9,6 +9,7 @@ configure do
   url_template = "http://grabbit.lucasrichter.id.au/download_jobs/tagged/{NAME}/feed.rss"
   xsl_url = 'http://assets.lucasrichter.id.au/xsl/rss.xsl'
   set :feeds, Feeds::DB.new(Feeds::UrlPattern.new(url_template, xsl_url))
+  set :fetcher, CachingFetcher.new
 end
 
 configure :production do
@@ -17,8 +18,10 @@ end
 
 # Get the feed and perform an XSL transform on it, then present the result to the client.
 get '/' do
-  rss = Faraday.get(settings.feeds.get_url(subdomain(request.host))).body
-  xsl = Faraday.get(settings.feeds.get_xsl(subdomain(request.host))).body
+  name = subdomain(request.host)
+  
+  rss = settings.fetcher.fetch(settings.feeds.get_url(name))
+  xsl = settings.fetcher.fetch(settings.feeds.get_xsl(name))
   
   xslt = XML::XSLT.new()
   xslt.xml = REXML::Document.new rss.force_encoding('utf-8')
@@ -29,5 +32,5 @@ end
 
 # Just get the feed and give it to the client.
 get '/rss' do
-  Faraday.get(settings.feeds.get_url(subdomain(request.host))).body
+  settings.fetcher.fetch(settings.feeds.get_url(subdomain(request.host)))
 end
