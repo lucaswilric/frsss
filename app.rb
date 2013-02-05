@@ -1,5 +1,8 @@
-gems = ['rexml/document', 'xml/xslt', 'haml', './feeds.rb', './caching_fetcher.rb']
+gems = ['rexml/document', 'xml/xslt', 'haml']
 gems.each {|_gem| require _gem }
+
+files = ['./feeds.rb', './caching_fetcher.rb', './memory_cache.rb', './db_cache.rb']
+files.each {|f| require f }
 
 def subdomain(host)
   host.split(/[.:]/)[0]
@@ -9,7 +12,7 @@ configure do
   url_template = "http://grabbit.lucasrichter.id.au/download_jobs/tagged/{NAME}/feed.rss"
   xsl_url = 'http://assets.lucasrichter.id.au/xsl/rss.xsl'
   set :feeds, Feeds::DB.new(Feeds::UrlPattern.new(url_template, xsl_url))
-  set :fetcher, CachingFetcher.new
+  set :fetcher, CachingFetcher.new(Cache::DbCache.new)
 end
 
 configure :production do

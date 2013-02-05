@@ -1,23 +1,17 @@
 
 class CachingFetcher
 
-  def initialize
-    @cache = {}
+  def initialize(cache)
+    @cache = cache
   end
 
   def fetch(url)
     raise 'Need a URL, dammit!' unless url
- 
-    unless valid?(url)
-      @cache[url] = { body: Faraday.get(url).body, updated_at: Time.now }
+
+    unless @cache.valid?(url)
+      @cache[url] = { body: Faraday.get(url).body }
     end
 
     @cache[url][:body]
-  end
-
-  private
-
-  def valid?(url)
-    @cache.has_key?(url) && @cache[url][:updated_at] > (Time.now - 600)
   end
 end

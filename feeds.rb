@@ -17,7 +17,7 @@ module Feeds
     def initialize(decorated = nil)
       @decorated = decorated
 
-      database = DbConnector.connect
+      database = DbConnector.connection
       @collection = database['feeds']
     end
     
