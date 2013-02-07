@@ -12,7 +12,7 @@ configure do
   url_template = "http://grabbit.lucasrichter.id.au/download_jobs/tagged/{NAME}/feed.rss"
   xsl_url = 'http://assets.lucasrichter.id.au/xsl/rss.xsl'
   set :feeds, Feeds::DB.new(Feeds::UrlPattern.new(url_template, xsl_url))
-  set :fetcher, CachingFetcher.new(Cache::DbCache.new)
+  set :fetcher, CachingFetcher.new(Cache::DbCache.new(ENV['DB_CACHE_TIMEOUT'] || 60))
 end
 
 configure :production do
