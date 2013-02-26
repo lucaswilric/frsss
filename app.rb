@@ -12,7 +12,8 @@ configure do
   url_template = "http://grabbit.lucasrichter.id.au/download_jobs/tagged/{NAME}/feed.rss"
   xsl_url = 'http://assets.lucasrichter.id.au/xsl/rss.xsl'
   set :feeds, Feeds::DB.new(Feeds::UrlPattern.new(url_template, xsl_url))
-  set :fetcher, CachingFetcher.new(Cache::MongoCache.new(ENV['DB_CACHE_TIMEOUT'].to_i || 60))
+  timeout = (ENV['DB_CACHE_TIMEOUT'] || 60).to_i
+  set :fetcher, CachingFetcher.new(Cache::MongoCache.new(timeout))
 end
 
 configure :production do

@@ -8,9 +8,10 @@ class CachingFetcher
   def fetch(url)
     raise 'Need a URL, dammit!' unless url
 
-    if @cache[url]
+    if @cache.valid? url
       body = @cache[url][:body]
     else
+      puts "Fetching '#{url}'."
       body = Faraday.get(url).body
       @cache[url] = { body: body }
     end
