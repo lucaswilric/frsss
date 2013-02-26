@@ -1,28 +1,22 @@
-
-require './db_connector.rb'
+require 'mongo_hq_connector'
 
 module Cache
   class NoDataError < Exception; end
-  class DbCache
+  class MongoCache
 
     def initialize(timeout = 600)
       @timeout = timeout
 
-      database = DbConnector.connection
+      database = MongoHqConnector.connection('friendly-rss')
       @collection = database['cache']
     end
 
     def [](url)
       items = find_entries(url)
 
-      #raise NoDataError, "No cache entry for '#{url}'." unless items.count > 0
       return nil if items.count == 0
 
       item = items.first
-
-      #item.delete '_id'
-      #item.delete 'updated_at'
-
       keys = item.keys
 
       keys.each do |k|

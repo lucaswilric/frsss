@@ -1,4 +1,4 @@
-require './db_connector.rb'
+require 'mongo_hq_connector'
 
 module Feeds
   module Decorator
@@ -17,7 +17,7 @@ module Feeds
     def initialize(decorated = nil)
       @decorated = decorated
 
-      database = DbConnector.connection
+      database = MongoHqConnector.connection('friendly-rss')
       @collection = database['feeds']
     end
     

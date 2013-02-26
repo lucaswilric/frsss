@@ -1,3 +1,9 @@
+PATH
+  remote: ~/code/mongo_hq_connector
+  specs:
+    mongo_hq_connector (0.0.1)
+      mongo (~> 1.6)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -70,6 +76,7 @@ DEPENDENCIES
   haml
   heroku
   mongo
+  mongo_hq_connector!
   newrelic_rpm
   ruby-xslt
   sinatra

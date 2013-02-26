@@ -1,7 +1,7 @@
-gems = ['rexml/document', 'xml/xslt', 'haml']
+gems = ['rexml/document', 'xml/xslt', 'haml', 'mongo_hq_connector']
 gems.each {|_gem| require _gem }
 
-files = ['./feeds.rb', './caching_fetcher.rb', './memory_cache.rb', './db_cache.rb']
+files = ['./feeds.rb', './caching_fetcher.rb', './mongo_cache.rb']
 files.each {|f| require f }
 
 def subdomain(host)
@@ -12,7 +12,7 @@ configure do
   url_template = "http://grabbit.lucasrichter.id.au/download_jobs/tagged/{NAME}/feed.rss"
   xsl_url = 'http://assets.lucasrichter.id.au/xsl/rss.xsl'
   set :feeds, Feeds::DB.new(Feeds::UrlPattern.new(url_template, xsl_url))
-  set :fetcher, CachingFetcher.new(Cache::DbCache.new(ENV['DB_CACHE_TIMEOUT'].to_i || 60))
+  set :fetcher, CachingFetcher.new(Cache::MongoCache.new(ENV['DB_CACHE_TIMEOUT'].to_i || 60))
 end
 
 configure :production do
