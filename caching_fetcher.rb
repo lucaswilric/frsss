@@ -1,8 +1,9 @@
 
 class CachingFetcher
 
-  def initialize(cache)
+  def initialize(cache, options = {})
     @cache = cache
+    @debug = options[:debug] || false
   end
 
   def fetch(url)
@@ -11,9 +12,11 @@ class CachingFetcher
     if @cache.valid? url
       body = @cache[url][:body]
     else
-      puts "Fetching '#{url}'."
-      body = Faraday.get(url).body
-      @cache[url] = { body: body }
+      puts "Fetching '#{url}'." if @debug
+      response = Faraday.get(url)
+      body = response.body
+
+      @cache[url] = { body: body } if response.success?
     end
 
     body
