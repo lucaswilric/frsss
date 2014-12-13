@@ -1,4 +1,4 @@
-require 'mongo_hq_connector'
+require 'mongo_connector'
 
 module Cache
   class NoDataError < Exception; end
@@ -7,7 +7,7 @@ module Cache
     def initialize(timeout = 600)
       @timeout = timeout
 
-      database = MongoHqConnector.connection('friendly-rss')
+      database = MongoConnector.connection('friendly-rss')
       @collection = database['cache']
     end
 
