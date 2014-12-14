@@ -7,7 +7,9 @@ module Cache
     def initialize(timeout = 600)
       @timeout = timeout
 
-      database = MongoConnector.new(ENV['MONGO_URI'], 'friendly-rss').connection
+      mongo_uri = ENV['MONGO_URI'] || ENV["MONGOHQ_URL"]
+
+      database = MongoConnector.new(mongo_uri, 'friendly-rss').connection
       @collection = database['cache']
     end
 

@@ -17,7 +17,9 @@ module Feeds
     def initialize(decorated = nil)
       @decorated = decorated
 
-      database = MongoConnector.new(ENV['MONGO_URI'], 'friendly-rss').connection
+      mongo_uri = ENV['MONGO_URI'] || ENV["MONGOHQ_URL"]
+
+      database = MongoConnector.new(mongo_uri, 'friendly-rss').connection
       @collection = database['feeds']
     end
     
