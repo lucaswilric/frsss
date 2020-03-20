@@ -7,6 +7,7 @@ GEM
     bson_ext (1.8.6)
       bson (~> 1.8.6)
     daemons (1.1.9)
+    diff-lcs (1.2.5)
     eventmachine (1.0.3)
     excon (0.42.1)
     faraday (0.8.9)
@@ -50,6 +51,19 @@ GEM
       rack (>= 1.0)
       rack-test (~> 0.6.2)
       ripl (>= 0.7.0)
+    rspec (3.4.0)
+      rspec-core (~> 3.4.0)
+      rspec-expectations (~> 3.4.0)
+      rspec-mocks (~> 3.4.0)
+    rspec-core (3.4.2)
+      rspec-support (~> 3.4.0)
+    rspec-expectations (3.4.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.4.0)
+    rspec-mocks (3.4.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.4.0)
+    rspec-support (3.4.1)
     ruby-xslt (0.9.9)
     rubyzip (0.9.9)
     sinatra (1.4.5)
@@ -79,7 +93,11 @@ DEPENDENCIES
   mongo
   mongo_connector
   newrelic_rpm
+  rspec
   ruby-xslt
   sinatra
   thin
   tux
+
+BUNDLED WITH
+   1.11.2
